@@ -1,9 +1,11 @@
 #include "Game.hpp"
 
-
 // TODO: 砲台の位置を画面左に、ターゲットの位置を画面右に移動させる。(A) hw16a188 三上貴頌
 // TODO: 雲の位置を左から右に動かす。見えなくなったら左端に戻す。(B) hw16a188 三上貴頌
 // TODO: 砲台を青い壁に沿って上下に動かす。(C) hw16a188 三上貴頌
+// TODO: 砲台の位置を画面左に、ターゲットの位置を画面右に移動させる。(A) hw16a045 掛樋勇斗
+// TODO: 雲の位置を左から右に動かす。見えなくなったら左端に戻す。(B) hw16a045 掛樋勇斗
+// TODO: 砲台を青い壁に沿って上下に動かす。(C) hw16a045 掛樋勇斗
 // TODO: 弾のスピードを速くし、弾が画面右端を通り越したら再度発射可能にする。(D)
 // TODO: スコアのサイズを大きくする。(E)
 // TODO: スコアを100点ずつ加算するようにし、5桁の表示に変える。(F)
@@ -33,19 +35,23 @@ void Start()
 void Update()
 {
     // 弾の発射
-    if (bulletPos.x <= -999 && Input::GetKeyDown(KeyMask::Space)) {
+    if (bulletPos.x <= -320 && Input::GetKeyDown(KeyMask::Space)) {
         bulletPos = cannonPos + Vector2(50, 10);
     }
     
     // 弾の移動
     if (bulletPos.x > -999) {
         bulletPos.x += 10 * Time::deltaTime;
+        bulletPos.x += 200 * Time::deltaTime;
+        if (bulletPos.x > 310) {
+            bulletPos.x =-999;
+        }
         
         // ターゲットと弾の当たり判定
         Rect bulletRect(bulletPos, Vector2(32, 20));
         if (targetRect.Overlaps(bulletRect)) {
             score += 1;         // スコアの加算
-            bulletPos.x = -999; // 弾を発射可能な状態に戻す
+            bulletPos.x = 700; // 弾を発射可能な状態に戻す
         }
     }
     
@@ -59,9 +65,17 @@ void Update()
     if(cloudPos.x > 300){
         cloudPos.x = -600;
     }
+    cloudPos.x += 3;
+    if(cloudPos.x > 300){
+        cloudPos.x = -600;
+    }
+    
+    
+    // 雲の描画
+    DrawImage("cloud1.png", cloudPos);
     
     // 弾の描画
-    if (bulletPos.x > -999) {
+    if (bulletPos.x < 700 ) {
         DrawImage("bullet.png", bulletPos);
     }
     
